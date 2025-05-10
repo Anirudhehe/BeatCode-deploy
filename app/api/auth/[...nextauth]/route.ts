@@ -40,6 +40,11 @@ const authOptions: NextAuthOptions = {
     error: '/login?auth_error=true',
   },
   basePath: "/api/auth",
+  debug: true, // Temporarily enable debug mode to see more detailed errors
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
   debug: process.env.NODE_ENV !== "production",
   logger: {
     error(code, metadata) {
@@ -54,7 +59,28 @@ const authOptions: NextAuthOptions = {
       console.log("Auth redirect callback triggered");
       console.log("Redirecting from:", url);
       console.log("Base URL:", baseUrl);
-      console.log("Calculated Base URL:", getBaseUrl());
+      
+      // Ensure baseUrl matches the environment
+      const currentBaseUrl = process.env.NEXTAUTH_URL || baseUrl;
+      
+      // If the URL is relative, make it absolute
+      if (url.startsWith('/')) {
+        return `${currentBaseUrl}${url}`;
+      }
+      
+      // If it's already an absolute URL
+      if (url.startsWith('http')) {
+        // Only allow URLs from our domain
+        const urlObject = new URL(url);
+        const baseUrlObject = new URL(currentBaseUrl);
+        
+        if (urlObject.hostname === baseUrlObject.hostname) {
+          return url;
+        }
+        return currentBaseUrl;
+      }
+
+    console.log("Calculated Base URL:", getBaseUrl());
       
       // Check if this is an absolute URL (external site)
       if (url.startsWith("http")) {
