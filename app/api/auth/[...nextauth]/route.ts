@@ -11,10 +11,10 @@ function getBaseUrl() {
     return process.env.NEXTAUTH_URL;
   }
 
-  // For Vercel deployments
-  if (process.env.VERCEL_URL) {
-    console.log("Using VERCEL_URL from env:", `https://${process.env.VERCEL_URL}`);
-    return `https://${process.env.VERCEL_URL}`;
+  // For production deployment on render.com
+  if (process.env.NODE_ENV === "production") {
+    console.log("Using production URL for render.com");
+    return "https://beatcode.onrender.com";
   }
 
   // Local development fallback
@@ -28,10 +28,8 @@ const authOptions: NextAuthOptions = {
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
-      // Adding client config for more options
       authorization: {
         params: {
-          // The space-separated scopes to request from GitHub
           scope: "read:user user:email",
         },
       },
@@ -39,12 +37,9 @@ const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: '/login',
-    // Adding error page for debugging
     error: '/login?auth_error=true',
   },
-  // Explicitly set the base URL
   basePath: "/api/auth",
-  // Debug mode - set to true during development
   debug: process.env.NODE_ENV !== "production",
   logger: {
     error(code, metadata) {
