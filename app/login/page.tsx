@@ -20,7 +20,12 @@ export default function LoginPage() {
   )
 }
 
-function LoginContent({ loading, setLoading }) {
+interface LoginContentProps {
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function LoginContent({ loading, setLoading }: LoginContentProps) {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || "/editor"
 

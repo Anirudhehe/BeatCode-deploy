@@ -39,13 +39,11 @@ const authOptions: NextAuthOptions = {
     signIn: '/login',
     error: '/login?auth_error=true',
   },
-  basePath: "/api/auth",
   debug: true, // Temporarily enable debug mode to see more detailed errors
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  debug: process.env.NODE_ENV !== "production",
   logger: {
     error(code, metadata) {
       console.error(`Auth error: ${code}`, metadata);

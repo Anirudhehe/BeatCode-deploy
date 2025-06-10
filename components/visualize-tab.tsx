@@ -161,7 +161,7 @@ export default function VisualizeTab({ timeData: initialTimeData, memoryData }: 
   }, []);
 
   // Generate data points for the line chart
-  const generateChartData = (originalComplexity, optimizedComplexity) => {
+  const generateChartData = (originalComplexity: string, optimizedComplexity: string) => {
     const data = [];
     
     // Generate data points for different input sizes
